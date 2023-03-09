@@ -1,0 +1,15 @@
+[level="0"]>.frame>.content {
+    width:100%;
+    height:100%;
+    display:grid;
+    grid-template-areas: "lt rt" "bottom bottom";
+    grid-auto-rows: auto min-content;
+    grid-template-columns: 1fr 1fr;
+}
+#Preview {background:linear-gradient(to bottom left,white 75%,#dee 85%,#9aa);box-shadow:-1px -1px 1px lightgray;padding:5px;grid-area:lt}
+#UINL {grid-area:rt;display:flex;flex-direction:column}
+#UINL>.title {flex: 0 1 auto;}
+#UINL>.content {flex: 1 1 auto;height:100%;max-height:none;font-size:11pt}
+[id="Add Component"] {grid-area:bottom}
+#Warning {text-align:right;color:#a00}
+#Warning * {display:inline}
