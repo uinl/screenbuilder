@@ -22,7 +22,7 @@ var COMPONENTS = new Map([
 ]);
 
 
-var lastUINL=`{"v":[\n  \n]}\n`;
+var lastValidUINLcode=`{"v":[\n  \n]}\n`;
 
 
 function userEvent(event){
@@ -35,8 +35,8 @@ function userEvent(event){
             value:[
                 {id:"Preview"},
                 {id:"UINL",v:[
-                    {id:'UINLcode',cap:'',v:lastUINL,in:1,on:{v:[]}},
-                    {id:'Reindent',class:'btn'},
+                    {id:'UINLcode',cap:'',v:lastValidUINLcode,in:1,on:{v:[]}},
+                    {id:'Clean up',class:'btn'},
                     {id:'Save',class:'btn'},
                 ]},
                 {id:"Add Component",v:[...COMPONENTS.keys()].map(x=>({id:x,c:'btn'}))},
@@ -44,66 +44,60 @@ function userEvent(event){
         });
 
     }else{ // on any user event other than handshake
-        var itemId=event.u,itemValue=event.v,uinl,display={};
-        display.Q=[];
-        display.Q.push({U:'UI→APP message',v:null});
-        display.Q.push({U:'Warning',v:null});
-        let addItems=[];
+        var itemId=event.u,
+            itemValue=event.v,
+            displayUpdates=[{U:'Warning',v:null}];
         
         if(itemId=='UINLcode'){ // if user is editing UINL directly
             try{
-                uinl=JSON.parse(itemValue);
-                if(uinl.constructor===Object){
-                    itemValue=JSON.stringify(uinl,null,2);
-                    if(itemValue!==lastUINL){
-                        lastUINL=itemValue;
-                        uinl.id='Preview';
-                        uinl.i=0;
-                        display.Q.push({U:'Preview',v:null});
-                        addItems.push(uinl);
+                let preview=JSON.parse(itemValue);
+                if(preview.constructor===Object){
+                    itemValue=JSON.stringify(preview,null,2);
+                    if(itemValue!==lastValidUINLcode){
+                        lastValidUINLcode=itemValue;
+                        preview.id='Preview';
+                        preview.i=0;
+                        displayUpdates.push({U:'Preview',v:null},{add:[preview]});
                     }
                 }else{
-                    addItems.push({id:'Warning',v:'APP→UI message must be a JSON object.'});
+                    displayUpdates.push({U:'UINL',add:[{id:'Warning',v:'APP→UI message must be a JSON object.'}]});
                 }
             }catch(e){
                 if(e.message.includes('JSON')){
-                    addItems.push({id:'Warning',v:'Invalid JSON string'});
+                    displayUpdates.push({U:'UINL',add:[{id:'Warning',v:'Invalid JSON string.'}]});
                 }else{
                     throw(e);
                 }
             }
 
-        }else if(itemId==='Reindent'){ // if user clicks Reindent
-            if(lastUINL){
-                display.Q.push({U:'UINLcode',v:lastUINL});
+        }else if(itemId==='Clean up'){ // if user clicks Clean up
+            if(lastValidUINLcode){
+                displayUpdates.push({U:'UINLcode',v:lastValidUINLcode});
             }
 
-        }else if(itemId==='Reindent'){ // if user clicks Reindent
-            if(lastUINL){
-                display.Q.push({U:'UINLcode',v:lastUINL});
+        }else if(itemId==='Save'){ // if user clicks Save
+            if(lastValidUINLcode){
+                displayUpdates.push({save:['screenBuilder.uinl',lastValidUINLcode]});
             }
 
         }else if(COMPONENTS.has(itemId)){ // check if one of the COMPONENTS buttons was clicked
-            uinl=JSON.parse(lastUINL);
-            if(!uinl.v || uinl.v.constructor!==Array)uinl.v=[];
-            uinl.v.push(COMPONENTS.get(itemId));
-            lastUINL=JSON.stringify(uinl,null,2);
-            display.Q.push({U:'UINLcode',v:lastUINL});
-            uinl.id='Preview';
-            uinl.i=0;
+            let preview=JSON.parse(lastValidUINLcode);
+            if(!preview.v || preview.v.constructor!==Array)preview.v=[];
+            preview.v.push(COMPONENTS.get(itemId));
+            lastValidUINLcode=JSON.stringify(preview,null,2);
+            displayUpdates.push({U:'UINLcode',v:lastValidUINLcode});
+            preview.id='Preview';
+            preview.i=0;
             // uinl.df={on:{pc:[]}};
-            display.Q.push({U:'Preview',v:null});
-            addItems.push(uinl);
+            displayUpdates.push({U:'Preview',v:null},{add:[preview]});
 
-        }else if(event.pc){ // check for point-click event
-            console.log(event);
+        // }else if(event.pc){ // check for point-click event
+        //     console.log(event);
             
 
-        }else{ // if one of the preview components is toggled/edited
-            addItems.push({id:'UI→APP message',v:JSON.stringify(event)});
+        // }else{ // if one of the preview components is toggled/edited
+            
         }
-
-        display.Q.push({add:addItems});
+        app.display({Q:displayUpdates});
     }
-    app.display(display);
 }
