@@ -1,3 +1,13 @@
+
+/* colors */
+#Preview {background:linear-gradient(to bottom left,white 75%,#dee 85%,#9aa);box-shadow:-1px -1px 1px lightgray}
+#Warning {color:#a00}
+@media (prefers-color-scheme: dark) {
+    #Preview {background:linear-gradient(to bottom right,#222 75%,#244 85%,#9aa);box-shadow:-1px -1px 1px #555}
+    #Warning {color:#a22}
+}
+
+/* layout */
 [level="0"]>.frame>.content {
     width:100%;
     height:100%;
@@ -7,16 +17,16 @@
     grid-template-columns: 1fr 1fr;
 }
 
-#Preview {background:linear-gradient(to bottom left,white 75%,#dee 85%,#9aa);box-shadow:-1px -1px 1px lightgray;padding:5px;grid-area:lt}
+#Preview {padding:5px;grid-area:lt}
 
 #UINL {grid-area:rt;display:flex;flex-direction:column}
 #UINL>.title {flex: 0 1 auto;}
-#UINL>.frame {flex: 1 1 auto;height:100%;max-height:none;font-size:11pt}
+#UINL>.frame {flex: 1 1 auto;height:100%;max-height:none;font-size:13pt}
 #UINL>.frame>.content {height:100%;display:flex;flex-direction: column;}
 #UINLcode {flex: 1 1 auto;}
 #UINLcode>.content {height:100% !important}
 
 [id="Add Component"] {grid-area:bottom}
 
-#Warning {text-align:right;color:#a00}
+#Warning {text-align:right}
 #Warning * {display:inline}
