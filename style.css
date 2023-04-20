@@ -8,7 +8,7 @@
 }
 
 /* layout */
-[level="0"]>.frame>.content {
+[level="0"]>.frame {
     width:100%;
     height:100%;
     display:grid;
@@ -20,9 +20,8 @@
 #Preview {padding:5px;grid-area:lt}
 
 #UINL {grid-area:rt;display:flex;flex-direction:column}
-#UINL>.title {flex: 0 1 auto;}
-#UINL>.frame {flex: 1 1 auto;height:100%;max-height:none;font-size:13pt}
-#UINL>.frame>.content {height:100%;display:flex;flex-direction: column;}
+/* #UINL>.title {flex: 0 1 auto;} */
+#UINL>.frame {font-size:13pt;display:flex;flex-direction: column;}
 #UINLcode {flex: 1 1 auto;}
 #UINLcode>.content {height:100% !important}
 
