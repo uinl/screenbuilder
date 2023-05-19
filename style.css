@@ -2,10 +2,8 @@
 /* colors */
 #Preview {background:linear-gradient(to bottom left,white 75%,#dee 85%,#9aa);box-shadow:-1px -1px 1px lightgray}
 #Warning {color:#a00}
-@media (prefers-color-scheme: dark) {
-    #Preview {background:linear-gradient(to bottom right,#222 75%,#244 85%,#9aa);box-shadow:-1px -1px 1px #555}
-    #Warning {color:#a22}
-}
+[theme="dark"] #Preview {background:linear-gradient(to bottom right,#222 75%,#244 85%,#9aa);box-shadow:-1px -1px 1px #555}
+[theme="dark"] #Warning {color:#a22}
 
 /* layout */
 [level="0"]>.frame {
